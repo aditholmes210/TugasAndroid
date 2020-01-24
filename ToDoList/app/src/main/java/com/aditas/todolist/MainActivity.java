@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList <String> data;
     private ArrayAdapter <String> dataAdapter;
     private ListView lvData;
+    private EditText inputList;
     private SharedPreferences pref;
     private Set <String> setList;
 
@@ -54,11 +55,18 @@ public class MainActivity extends AppCompatActivity {
                                 data.remove(which_item);
                                 dataAdapter.notifyDataSetChanged();
                                 savePreference();
+                                regAndSort();
                             }
                         })
-                        .setNegativeButton("No",null).show();
+                        .setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                showEdit(which_item);
+                            }
+                        })
+                        .setNeutralButton("Cancel", null).show();
 //                savePreference();
-                regAndSort();
+
                 return true;
             }
         });
@@ -113,5 +121,28 @@ public class MainActivity extends AppCompatActivity {
             String key = String.valueOf(i);
             editor.putString(key, data.get(i));
         }
+    }
+
+    private void showEdit(final int pos){
+        View view = View.inflate(this, R.layout.dialog_add, null);
+        inputList = view.findViewById(R.id.input_list);
+        inputList.setText(dataAdapter.getItem(pos));
+        AlertDialog.Builder dial = new AlertDialog.Builder(this);
+        dial.setTitle("Want to change the data?");
+        dial.setView(view);
+        dial.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               editItem(pos, inputList.getText().toString());
+            }
+        });
+        dial.setNegativeButton("Cancel", null);
+        dial.create().show();
+    }
+
+    private void editItem(int pos, String newItem){
+        data.set(pos, newItem);
+        regAndSort();
+        dataAdapter.notifyDataSetChanged();
     }
 }
