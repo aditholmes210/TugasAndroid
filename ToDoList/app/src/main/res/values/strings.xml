@@ -3,4 +3,5 @@
     <string name="list_txt">First</string>
     <string name="btn_add">Update</string>
     <string name="btn_del">Delete</string>
+    <string name="what_write">What do you want to write?</string>
 </resources>
