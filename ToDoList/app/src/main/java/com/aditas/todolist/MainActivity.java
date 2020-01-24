@@ -46,17 +46,19 @@ public class MainActivity extends AppCompatActivity {
                 final int which_item = position;
                 new AlertDialog.Builder(MainActivity.this)
                         .setIcon(android.R.drawable.ic_delete)
-                        .setTitle("Yakin?")
-                        .setMessage("Beneran mo ngapus nh?")
-                        .setPositiveButton("Njeh", new DialogInterface.OnClickListener() {
+                        .setTitle("Remove")
+                        .setMessage("You sure want to delete this?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 data.remove(which_item);
                                 dataAdapter.notifyDataSetChanged();
+                                savePreference();
                             }
                         })
-                        .setNegativeButton("Ora",null).show();
-                savePreference();;
+                        .setNegativeButton("No",null).show();
+//                savePreference();
+                regAndSort();
                 return true;
             }
         });
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 addTask();
+                savePreference();
             }
         }));
 
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 data.add(inputField.getText().toString());
-                savePreference();
+//                savePreference();
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -99,5 +102,16 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = pref.edit();
         editor.putStringSet(TODO_LIST, setList);
         editor.apply();
+    }
+
+    private void regAndSort(){
+        pref = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.clear();
+        editor.apply();
+        for(int i = 0;i < data.size(); i++){
+            String key = String.valueOf(i);
+            editor.putString(key, data.get(i));
+        }
     }
 }
