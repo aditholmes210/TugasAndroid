@@ -1,0 +1,19 @@
+{
+  "person": {
+    "name": "Adit",
+    "age": 25,
+    "gender": "male",
+    "address": [
+      {
+        "addressName": "home",
+        "detail": "Jl. Tanjung I",
+        "city": "BSD City"
+      },
+      {
+        "addressName":"office",
+        "detail":"Jl. Grand Boulevard BSD",
+        "city": "BSD City"
+      }
+    ]
+  }
+}
