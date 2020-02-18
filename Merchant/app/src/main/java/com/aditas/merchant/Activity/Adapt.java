@@ -1,17 +1,24 @@
 package com.aditas.merchant.Activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.aditas.merchant.R;
 import com.aditas.merchant.entity.Product;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import static android.nfc.NfcAdapter.EXTRA_DATA;
 
 public class Adapt extends RecyclerView.Adapter<Adapt.MainHolder>{
     private List<Product> prod;
@@ -25,15 +32,13 @@ public class Adapt extends RecyclerView.Adapter<Adapt.MainHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull MainHolder holder, int pos){
-//        if(prod !=null){
-//            holder.onBInd(prod.get(pos));
-//        }
-        holder.prodName.setText(prod.get(pos).getName());
-        holder.MerchName.setText(prod.get(pos).getMerch().getName());
-        String baseUrl = "http://192.168.6.221:81/storage";
-        String url = baseUrl+prod.get(pos).getImage();
-
-        Glide with
+        if(prod !=null){
+            holder.onBInd(prod.get(pos));
+        }
+//        holder.prodName.setText(prod.get(pos).getName());
+//        holder.MerchName.setText(prod.get(pos).getMerch().getName());
+//        String baseUrl = "http://192.168.6.221:81/storage";
+//        String url = baseUrl+prod.get(pos).getImage();
     }
 
     @Override
@@ -47,18 +52,49 @@ public class Adapt extends RecyclerView.Adapter<Adapt.MainHolder>{
 
 
     class MainHolder extends RecyclerView.ViewHolder{
+        private Context ctx;
         private ImageView img;
         private TextView prodName, MerchName;
+        private ProgressBar progImg;
+        private Product product;
 
         MainHolder(@NonNull View itemView){
             super(itemView);
             img = itemView.findViewById(R.id.img_prod);
             prodName = itemView.findViewById(R.id.tv_prod_name);
             MerchName = itemView.findViewById(R.id.tv_merch_name);
+            progImg = itemView.findViewById(R.id.progress_image);
+
+            ctx = itemView.getContext();
+            itemView.setOnClickListener(listen);
         }
         public void onBInd(Product product) {
             prodName.setText(product.getName());
             MerchName.setText(product.getMerch().getName());
+            Picasso.get()
+                    .load(product.getImage())
+                    .error(R.drawable.flip)
+                    .fit()
+                    .into(img, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            progImg.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            progImg.setVisibility(View.INVISIBLE);
+                            e.printStackTrace();
+                        }
+                    });
         }
+        View.OnClickListener listen = new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(ctx, Detail.class);
+                i.putExtra(EXTRA_DATA, product);
+                ctx.startActivity(i);
+            }
+        };
     }
 }
