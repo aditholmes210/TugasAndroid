@@ -3,10 +3,22 @@ package com.aditas.merchant.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Product implements Parcelable {
-    private int id, qty;
-    private String name, slug, image;
+    @SerializedName("productId")
+    private int id;
+    @SerializedName("productQty")
+    private int qty;
+    @SerializedName("productName")
+    private String name;
+    @SerializedName("productSlug")
+    private String slug;
+    @SerializedName("productImage")
+    private String image;
+    @SerializedName("merchant")
     private Merchant merch;
+    @SerializedName("category")
     private Category catg;
 
     public Product(int id, int qty, String name, String slug, String image, Merchant merch, Category catg){

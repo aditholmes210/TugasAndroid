@@ -2,15 +2,19 @@ package com.aditas.merchant.Activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aditas.merchant.ListProd;
 import com.aditas.merchant.R;
 import com.aditas.merchant.entity.Category;
 import com.aditas.merchant.entity.Merchant;
 import com.aditas.merchant.entity.Product;
+import com.google.gson.Gson;
+
 import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         adpt = new Adapt();
         rvMarket.setAdapter(adpt);
         rvMarket.setLayoutManager(new GridLayoutManager(this, 2));
-        new NetTask(adpt, prds).execute(url);
+        new NetTask(adpt).execute(url);
 
         //desJSON();
         //adpt.setProd(prds);
@@ -117,12 +121,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             private static class NetTask extends AsyncTask<String, Void, String>{
-                private WeakReference<List<Product>> prd;
                 private WeakReference<Adapt> adapt;
 
-                NetTask(Adapt adapt, List<Product> prd) {
+                NetTask(Adapt adapt) {
                     this.adapt = new WeakReference<>(adapt);
-                    this.prd = new WeakReference<>(prd);
                 }
 
                 @Override
@@ -161,7 +163,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(String s){
                     if(!s.equals("")){
-                        try{
+                        //try{
+                            Gson jsonConv = new Gson();
+                            ListProd prz = jsonConv.fromJson(s, ListProd.class);
+                            Log.i("json :" ,s);
+                            Adapt adapter = adapt.get();
+                            adapter.setProd(prz.getProdz());
+                            adapter.notifyDataSetChanged();
+                            /*
                             JSONObject obj = new JSONObject(s);
                             JSONArray arr = obj.getJSONArray("data");
 
@@ -180,10 +189,10 @@ public class MainActivity extends AppCompatActivity {
                                 Category cts = createCategory(catg);
                                 Product prdt = new Product(id, qty, name, slug, image, mer,cts);
                                 prd.get().add(prdt);
-                            }
-                             adapt.get().setProd(prd.get());
-                        }
-                         catch (JSONException e){ e.printStackTrace(); }
+                            }*/
+
+                        //}
+                         //catch (JSONException e){ e.printStackTrace(); }
                     }
                 }
             }

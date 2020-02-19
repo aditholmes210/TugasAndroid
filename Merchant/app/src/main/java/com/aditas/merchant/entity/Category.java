@@ -3,8 +3,12 @@ package com.aditas.merchant.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Category implements Parcelable {
+    @SerializedName("categoryId")
     private int id;
+    @SerializedName("categoryName")
     private String name;
 
     public Category(int id, String name){
