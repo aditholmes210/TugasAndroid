@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         adpt = new Adapt();
         rvMarket.setAdapter(adpt);
         rvMarket.setLayoutManager(new GridLayoutManager(this, 2));
-
         new NetTask(adpt, prds).execute(url);
 
         //desJSON();
@@ -94,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
                 return json;
         }
 
-            private Merchant createMerchant (JSONObject merch){
+            private static Merchant createMerchant (JSONObject merch){
                 try {
-                    int id = merch.getInt("merchantID");
+                    int id = merch.getInt("merchantId");
                     String name = merch.getString("merchantName");
                     String slug = merch.getString("merchantSlug");
                     return new Merchant(id, name, slug);
@@ -106,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
                     return null;
                 }
             }
-            private Category createCategory (JSONObject cat){
+            private static Category createCategory (JSONObject cat){
                 try {
-                    int id = cat.getInt("categoryID");
+                    int id = cat.getInt("categoryId");
                     String name = cat.getString("categoryName");
                     return new Category(id, name);
                 } catch (JSONException e) {
@@ -142,9 +141,9 @@ public class MainActivity extends AppCompatActivity {
 
                             String each;
                             while((each = br.readLine()) != null){
-                                StringBuilder.append(each);
+                                sb.append(each);
                             }
-                            json = StringBuilder.toString();
+                            json = sb.toString();
                         }
                          catch (IOException e) {
                             e.printStackTrace();
@@ -160,13 +159,13 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                protected void onPostExe(String s){
+                protected void onPostExecute(String s){
                     if(!s.equals("")){
                         try{
                             JSONObject obj = new JSONObject(s);
                             JSONArray arr = obj.getJSONArray("data");
 
-                            for(int i=0; i<arr; i++){
+                            for(int i=0; i<arr.length(); i++){
                                 JSONObject prod = arr.getJSONObject(i);
                                 JSONObject merc = prod.getJSONObject("merchant");
                                 JSONObject catg = prod.getJSONObject("category");
@@ -177,10 +176,10 @@ public class MainActivity extends AppCompatActivity {
                                 String slug = prod.getString("productSlug");
                                 String image = prod.getString("productImage");
 
-                                Merchant mercn = createMerchant(merc);
-                                Category cats = createCategory(catg);
-                                Product prdt = new Product(id, qty, name, slug, image, mercn,cats);
-                                prod.get().add(prdt);
+                                Merchant mer = createMerchant(merc);
+                                Category cts = createCategory(catg);
+                                Product prdt = new Product(id, qty, name, slug, image, mer,cts);
+                                prd.get().add(prdt);
                             }
                              adapt.get().setProd(prd.get());
                         }

@@ -32,7 +32,7 @@
     <TableRow>
 
         <TextView
-            android:text="Merchant" />
+            android:text="Merchant " />
 
         <TextView
             android:id="@+id/tv_detail_merch"

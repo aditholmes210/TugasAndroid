@@ -15,9 +15,9 @@ import com.aditas.merchant.entity.Product;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import static android.nfc.NfcAdapter.EXTRA_DATA;
 
 public class Detail extends AppCompatActivity {
+    public static String EXTRA_DATA = "";
     private ImageView image;
     private TextView name, qty, cat, merch;
     private ProgressBar progImg;
@@ -36,7 +36,7 @@ public class Detail extends AppCompatActivity {
             String _cat = prodt.getCatg().getName();
             String _merch = prodt.getMerch().getName();
 
-            //setImage(_img);
+            setImage(_img);
             name.setText(_name);
             qty.setText(_qty);
             cat.setText(_cat);
@@ -46,7 +46,7 @@ public class Detail extends AppCompatActivity {
 
     private void setImage(String url){
         Picasso.get()
-                .load(url)
+                .load("http://192.168.6.221:81/storage/"+url)
                 .error(R.drawable.ic_launcher_background)
                 .fit()
                 .into(image, new Callback() {
@@ -68,7 +68,7 @@ public class Detail extends AppCompatActivity {
         name = findViewById(R.id.tv_detail_name);
         qty = findViewById(R.id.tv_detail_qty);
         cat = findViewById(R.id.tv_detail_category);
-        merch = findViewById(R.id.tv_merch_name);
+        merch = findViewById(R.id.tv_detail_merch);
         progImg = findViewById(R.id.prog_detail);
     }
 
