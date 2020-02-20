@@ -1,9 +1,18 @@
 package com.aditas.merchant.entity;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Mhs {
+    @SerializedName("namaDpn")
+    @Expose
     private String namaDpn;
+    @SerializedName("namaBlkg")
+    @Expose
     private String namaBlkg;
-    private int umur;
+    @Expose(serialize = false) //hide umur di proses serialize
+    private  int umur;
+    @Expose
     private String jur;
 
     public Mhs(String namaDpn, String namaBlkg, int umur, String jur) {
