@@ -75,8 +75,8 @@ public class Adapt extends RecyclerView.Adapter<Adapt.MainHolder>{
             prodName.setText(product.getName());
             MerchName.setText(product.getMerch().getName());
             Picasso.get()
-                    .load("http://192.168.6.221:81/storage/"+product.getImage())
-                    .error(R.drawable.flip)
+                    .load("http://210.210.154.65:4444/storage/"+product.getImage())
+                    .error(R.drawable.ic_launcher_background)
                     .fit()
                     .into(img, new Callback() {
                         @Override

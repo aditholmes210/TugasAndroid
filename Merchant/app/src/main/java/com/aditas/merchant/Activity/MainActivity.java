@@ -3,6 +3,7 @@ package com.aditas.merchant.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -13,6 +14,13 @@ import com.aditas.merchant.R;
 import com.aditas.merchant.entity.Category;
 import com.aditas.merchant.entity.Merchant;
 import com.aditas.merchant.entity.Product;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvMarket;
     private Adapt adpt;
     private List<Product> prds = new ArrayList<>();
-    private String url = "http://192.168.6.221:81/api/products";
+    private RequestQueue queue;
+    //private String url = "http://210.210.154.65:4444/api/products";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +55,52 @@ public class MainActivity extends AppCompatActivity {
         adpt = new Adapt();
         rvMarket.setAdapter(adpt);
         rvMarket.setLayoutManager(new GridLayoutManager(this, 2));
-        new NetTask(adpt).execute(url);
+        //new NetTask(adpt).execute(url);
+        queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "http://210.210.154.65:4444/api/products";
+
+        StringRequest prodReq;
+        prodReq = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Handle response
+                Gson data = new Gson();
+                ListProd lp = data.fromJson(response, ListProd.class);
+                adpt.setProd(lp.getProdz());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Error", error.getMessage());
+            }
+        });
+
+        /*JsonObjectRequest prodReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //handle response
+                try {
+                    ArrayList<Product> prodz = new ArrayList<>();
+                    JSONArray data = response.getJSONArray("data");
+                    for(int i = 0; i < data.length(); i++){
+                        Gson gson = new Gson();
+                        Product prod = gson.fromJson(data.getJSONObject(i).toString(), Product.class);
+                        prodz.add(prod);
+                    }
+                    adpt.setProd(prodz);
+                    Toast.makeText(getApplicationContext(), String.valueOf(adpt.getItemCount()), Toast.LENGTH_LONG).show();
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley error", error.getMessage());
+            }
+        });*/
+        queue.add(prodReq);
 
         //desJSON();
         //adpt.setProd(prds);
@@ -81,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }*/
 
-        private String getJSON () {
+        /*private String getJSON () {
             String json = " ";
             try {
                 InputStream is = getResources().openRawResource(R.raw.data);
@@ -95,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
                  e.printStackTrace();
                  }
                 return json;
-        }
+        }*/
 
-            private static Merchant createMerchant (JSONObject merch){
+            /*private static Merchant createMerchant (JSONObject merch){
                 try {
                     int id = merch.getInt("merchantId");
                     String name = merch.getString("merchantName");
@@ -118,9 +172,9 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                     return null;
                 }
-            }
+            }*/
 
-            private static class NetTask extends AsyncTask<String, Void, String>{
+            /*private static class NetTask extends AsyncTask<String, Void, String>{
                 private WeakReference<Adapt> adapt;
 
                 NetTask(Adapt adapt) {
@@ -189,11 +243,11 @@ public class MainActivity extends AppCompatActivity {
                                 Category cts = createCategory(catg);
                                 Product prdt = new Product(id, qty, name, slug, image, mer,cts);
                                 prd.get().add(prdt);
-                            }*/
+                            }
 
                         //}
                          //catch (JSONException e){ e.printStackTrace(); }
                     }
                 }
-            }
+            }*/
 }
